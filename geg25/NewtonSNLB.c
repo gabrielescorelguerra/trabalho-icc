@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <likwid.h>
 
 #include "SistNaoLinearBroyden.h"
 #include "NewtonSNLB.h"
@@ -8,7 +9,6 @@
 #include "utils.h"
 
 int newton(double *X, double epsilon, int n, int MAXIT) {
-
     // Temporizadores
     double tempoTotal = timestamp();
     double tempoJ = 0.0;
@@ -35,7 +35,9 @@ int newton(double *X, double epsilon, int n, int MAXIT) {
         calcF(F, X, n);
 
         double tempoInicJ = timestamp();
+        LIKWID_MARKER_START("calcJ");
         calcJ(J, X, n);
+        LIKWID_MARKER_STOP("calcJ");
         tempoJ += timestamp() - tempoInicJ;
 
         // inverte o sinal de F para resolver o sistema linear J * deltaX = -F
@@ -45,7 +47,9 @@ int newton(double *X, double epsilon, int n, int MAXIT) {
 
         // resolve o sistema linear J * deltaX = -F para encontrar deltaX por eliminacao de Gauss
         double tempoInicSisLinear = timestamp();
+        LIKWID_MARKER_START("eliminacaoGauss");
         eliminacaoGauss(J, S, F, n);
+        LIKWID_MARKER_STOP("eliminacaoGauss");
         tempo_sisLinear += timestamp() - tempoInicSisLinear;
 
         // Atualiza X com as soluções aproximadas.

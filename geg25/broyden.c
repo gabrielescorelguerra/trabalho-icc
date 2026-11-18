@@ -3,6 +3,7 @@
 
 // #include "utils.h"
 #include "NewtonSNLB.h"
+#include <likwid.h>
 
 /* 
 n: dimensão do SNLB
@@ -21,6 +22,9 @@ int main() {
     scanf("%lf", &epsilon);
     scanf("%d", &MAXIT);
 
+    // inicializa o LIKWID
+    LIKWID_MARKER_INIT;
+
     // aloca memória para o vetor de variáveis, inicializando todas com x0
     double *X = (double *) malloc(sizeof(double) * n);
     for (int i = 0; i < n; ++i) {
@@ -28,7 +32,12 @@ int main() {
     }
 
     // executa o método de Newton para resolver o sistema não linear de Broyden
+    LIKWID_MARKER_START("newton");
     newton(X, epsilon, n, MAXIT);
+    LIKWID_MARKER_STOP("newton");
+
+    // finaliza o LIKWID
+    LIKWID_MARKER_CLOSE;
 
     // libera a memória alocada para o vetor de variáveis
     free(X);

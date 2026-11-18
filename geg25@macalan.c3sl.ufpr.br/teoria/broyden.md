@@ -1,1 +1,0 @@
-# Estrutura especial da função de Broyden
