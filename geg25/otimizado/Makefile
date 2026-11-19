@@ -6,6 +6,8 @@ CC = gcc -O3 $(AVX_FLAGS)
 PROG = broyden
 OBJS = utils.o EliminacaoGauss.o NewtonSNLB.o SistNaoLinearBroyden.o
 
+AVX_FLAGS = -mavx2 -march=native -fopt-info-vec
+
 all: $(PROG)
 
 $(PROG): $(OBJS) $(PROG).o
