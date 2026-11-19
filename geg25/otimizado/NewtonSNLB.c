@@ -73,9 +73,9 @@ int newton(double *X, double epsilon, int n, int MAXIT) {
     // Libera a memória alocada para F, J e S
     free(F);
     for (int i = 0; i < n; ++i) {
-        free(J[i]);
+        free(Jdiag[i]);
     }
-    free(J);
+    free(Jdiag);
     free(S);
   
     return 0; // Retorna 0 para indicar sucesso (ou outro valor para indicar falha)
