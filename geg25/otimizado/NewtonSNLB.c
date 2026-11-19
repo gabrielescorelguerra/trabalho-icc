@@ -9,27 +9,24 @@
 #include "utils.h"
 
 int newton(double *X, double epsilon, int n, int MAXIT) {
+
+    LIKWID_MARKER_START("newton");
+
     // Temporizadores
+    double tempoTotal = timestamp();
     double tempoJ = 0.0;
     double tempo_sisLinear = 0.0;
 
-    // vai armazenar as saidas das iteracoes
-    double *valoresX = (double *) malloc(sizeof(double) * (MAXIT + 1) * n);
-    int iteracoes = 0; // quantas iteracoes foram guardadas alem da inicial
-
-    // guarda o vetor de variáveis X inicial (iteracao 0)
-    for (int i = 0; i < n; ++i) {
-        valoresX[i] = X[i];
-    }
-
-    // a contagem de tempo comeca aqui: a alocacao de F, J e S entra, a de valoresX nao
-    double tempoTotal = timestamp();
-    LIKWID_MARKER_START("newton");
-
     // Aloca memória para F, J e S
     double *F = (double *) malloc(sizeof(double) * n);
-    double *S = (double *) malloc(sizeof(double) * n);
+    double *S = (double *) malloc(sizeof(double) * n); 
     double *Jdiag = (double *) malloc(sizeof(double) * n);
+
+    // imprime o vetor de variáveis X inicial
+    for (int i = 0; i < n; ++i) {
+        printf("x%d = %lf\n", i + 1, X[i]);
+    }
+    printf("#");
 
     // loop de iteracoes
     for (int iter = 0; iter < MAXIT; ++iter) {
@@ -59,11 +56,11 @@ int newton(double *X, double epsilon, int n, int MAXIT) {
             X[i] += S[i];
         }
 
-        // guarda o vetor de variáveis X atual
-        iteracoes++;
+        // imprime o vetor de variáveis X atual
         for (int i = 0; i < n; ++i) {
-            valoresX[iteracoes * n + i] = X[i];
+            printf("\nx%d = %lf", i + 1, X[i]);
         }
+        printf("\n#");
 
         // Verifica os critérios de parada com base em epsilon. CONFERIR
         if (norma(S, n) < epsilon) {
@@ -71,30 +68,17 @@ int newton(double *X, double epsilon, int n, int MAXIT) {
         }
     }
 
-    LIKWID_MARKER_STOP("newton");
-
+    // imprime tempos
     tempoTotal = timestamp() - tempoTotal;
 
-    // dai acaba aqui 
-
-    // imprime todas as iteracoes (a 0 eh o X inicial), separadas por '#'
-    for (int k = 0; k <= iteracoes; ++k) {
-        for (int i = 0; i < n; ++i) {
-            printf("x%d = %lf\n", i + 1, valoresX[k * n + i]);
-        }
-        if (k < iteracoes) {
-            printf("#\n");
-        }
-    }
-
-    // imprime tempos
-    printf("###########\n%.15g\n%.15g\n%.15g\n###########\n", tempoTotal, tempoJ, tempo_sisLinear);
+    printf("##########\n%.15g\n%.15g\n%.15g\n###########\n", tempoTotal, tempoJ, tempo_sisLinear);
 
     // Libera a memória alocada para F, J e S
     free(F);
     free(Jdiag);
     free(S);
-    free(valoresX);
+
+    LIKWID_MARKER_STOP("newton");
   
     return 0; // Retorna 0 para indicar sucesso (ou outro valor para indicar falha)
 }
