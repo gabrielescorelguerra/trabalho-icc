@@ -72,7 +72,7 @@ int newton(double *X, double epsilon, int n, int MAXIT) {
     // imprime tempos
     tempoTotal = timestamp() - tempoTotal;
 
-    printf("##########\n%.15g\n%.15g\n%.15g)\n###########\n", tempoTotal, tempoJ, tempo_sisLinear);
+    printf("##########\n%.15g\n%.15g\n%.15g\n###########\n", tempoTotal, tempoJ, tempo_sisLinear);
 
     // Libera a memória alocada para F, J e S
     free(F);
