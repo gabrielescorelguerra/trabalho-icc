@@ -9,6 +9,9 @@
 #include "utils.h"
 
 int newton(double *X, double epsilon, int n, int MAXIT) {
+
+    LIKWID_MARKER_START("newton");
+
     // Temporizadores
     double tempoTotal = timestamp();
     double tempoJ = 0.0;
@@ -74,6 +77,8 @@ int newton(double *X, double epsilon, int n, int MAXIT) {
     free(F);
     free(Jdiag);
     free(S);
+
+    LIKWID_MARKER_STOP("newton");
   
     return 0; // Retorna 0 para indicar sucesso (ou outro valor para indicar falha)
 }

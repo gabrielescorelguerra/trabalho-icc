@@ -32,9 +32,7 @@ int main() {
     }
 
     // executa o método de Newton para resolver o sistema não linear de Broyden
-    LIKWID_MARKER_START("newton");
     newton(X, epsilon, n, MAXIT);
-    LIKWID_MARKER_STOP("newton");
 
     // finaliza o LIKWID
     LIKWID_MARKER_CLOSE;
