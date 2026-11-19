@@ -20,7 +20,7 @@ TEMPOS="${DATA_DIR}/Tempos.csv"
 METRICA="MEM L2CACHE FLOPS_DP FLOPS_AVX"
 
 # tamanhos
-TAMANHOS="32 64 128 256 512 1000 2000 4000 8000 9000 10000 20000"
+TAMANHOS="32 64 128 256 512 1000 2000 4000" # 8000 9000 10000 20000"
 
 X0=-1
 EPS=0
@@ -69,7 +69,7 @@ do
         # ./PROG -n n : executa o programa pra entrada n
         # >> ${TEMPOS} : redirecionamento do bash, diz para acresentar isso no arquivo de tempos
         printf "%s\n%s\n%s\n%s\n" "$n" "$X0" "$EPS" "$MAXIT" | likwid-perfctr -O -C ${CPU} -g ${m} -o ${LIKWID_OUT} -m ./${PROG} \
-                | awk '/^###########$/ {f = !f; next} f' | paste -sd, - | sed "${m} ${n} s/^/${n},/" >> ${TEMPOS}
+                | awk '/^###########$/ {f = !f; next} f' | paste -sd, - | sed "s/^/${n},/" >> ${TEMPOS}
             
         # echo "===> N: ${n} <==" >> ${LIKWID_LOG}
         # pega o conteudo do temporario e junta no log, que eh referente a metrica

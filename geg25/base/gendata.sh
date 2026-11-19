@@ -69,7 +69,7 @@ do
         # ./PROG -n n : executa o programa pra entrada n
         # >> ${TEMPOS} : redirecionamento do bash, diz para acresentar isso no arquivo de tempos
         printf "%s\n%s\n%s\n%s\n" "$n" "$X0" "$EPS" "$MAXIT" | likwid-perfctr -O -C ${CPU} -g ${m} -o ${LIKWID_OUT} -m ./${PROG} \
-                | awk '/^###########$/ {f = !f; next} f' | paste -sd, - | sed "${m} ${n} s/^/${n},/" >> ${TEMPOS}
+                | awk '/^###########$/ {f = !f; next} f' | paste -sd, - | sed "s/^/${n},/" >> ${TEMPOS}
             
         # echo "===> N: ${n} <==" >> ${LIKWID_LOG}
         # pega o conteudo do temporario e junta no log, que eh referente a metrica
