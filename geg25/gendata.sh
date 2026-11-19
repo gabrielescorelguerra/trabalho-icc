@@ -62,7 +62,7 @@ do
         # impreme o que esta sendo executado
         # --->> metria ./programa tamanho
         # so para conseguir acompanhar o que esta sendo executado, nao tem efeito na saida do programa
-        echo "printf "%s\n%s\n%s\n%s\n" "$n" "$X0" "$EPS" "$MAXIT" --->>  $m: ./${PROG}" >/dev/tty
+        echo "${n} ${X0} ${EPS} ${MAXIT} --->>  $m: ./${PROG}" >/dev/tty
 
         # roda o comando do perfctr e a saida vai para LIKWID_OUT
         # -C : cores
@@ -71,7 +71,7 @@ do
         # -m : ativa o modo marker api
         # ./PROG -n n : executa o programa pra entrada n
         # >> ${TEMPOS} : redirecionamento do bash, diz para acresentar isso no arquivo de tempos
-        likwid-perfctr -O -C ${CPU} -g ${m} -o ${LIKWID_OUT} -m ./${PROG} -n ${n} >>${TEMPOS}
+        printf "%s\n%s\n%s\n%s\n" "$n" "$X0" "$EPS" "$MAXIT" | -O -C ${CPU} -g ${m} -o ${LIKWID_OUT} -m ./${PROG} -n ${n} >>${TEMPOS}
             
         # echo "===> N: ${n} <==" >> ${LIKWID_LOG}
         # pega o conteudo do temporario e junta no log, que eh referente a metrica
