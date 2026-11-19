@@ -39,7 +39,7 @@ campos = {
     "MEM": r"Memory bandwidth \[*MBytes/s\]*",
 }
 
-# testes do likwid, um grafico por trecho cada.
+# testes do likwid, um grafi-co por trecho cada.
 # nome: (texto do eixo y, [(rotulo da linha, grupo do likwid)])
 # o teste de FLOPS junta os grupos FLOPS_DP e FLOPS_AVX no mesmo grafico
 testes = {

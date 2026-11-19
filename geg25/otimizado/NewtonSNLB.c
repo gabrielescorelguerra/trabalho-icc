@@ -16,12 +16,8 @@ int newton(double *X, double epsilon, int n, int MAXIT) {
 
     // Aloca memória para F, J e S
     double *F = (double *) malloc(sizeof(double) * n);
-    double *S = (double *) malloc(sizeof(double) * n);
-
-    double **J = (double **) malloc(sizeof(double *) * n);
-    for (int i = 0; i < n; ++i) {
-        J[i] = (double *) calloc(n, sizeof(double));
-    }
+    double *S = (double *) malloc(sizeof(double) * n); 
+    double *Jdiag = (double *) malloc(sizeof(double) * n);
 
     // imprime o vetor de variáveis X inicial
     for (int i = 0; i < n; ++i) {
@@ -36,7 +32,7 @@ int newton(double *X, double epsilon, int n, int MAXIT) {
 
         double tempoInicJ = timestamp();
         LIKWID_MARKER_START("calcJ");
-        calcJ(J, X, n);
+        calcJ(Jdiag, X, n);
         LIKWID_MARKER_STOP("calcJ");
         tempoJ += timestamp() - tempoInicJ;
 
@@ -48,7 +44,7 @@ int newton(double *X, double epsilon, int n, int MAXIT) {
         // resolve o sistema linear J * deltaX = -F para encontrar deltaX por eliminacao de Gauss
         double tempoInicSisLinear = timestamp();
         LIKWID_MARKER_START("eliminacaoGauss");
-        eliminacaoGauss(J, S, F, n);
+        eliminacaoGauss(Jdiag, S, F, n);
         LIKWID_MARKER_STOP("eliminacaoGauss");
         tempo_sisLinear += timestamp() - tempoInicSisLinear;
 
