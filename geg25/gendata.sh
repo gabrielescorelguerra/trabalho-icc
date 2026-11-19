@@ -27,7 +27,7 @@ METRICA="MEM L2CACHE FLOPS_DP FLOPS_AVX"
 # tamanhos
 TAMANHOS="32 64" # 128 256 512 1000 2000 4000 8000 9000 10000 20000 4092 6000 7000 10000 50000 100000
 
-X0=-1.0e
+X0=-1
 EPS=0
 MAXIT=25
 
@@ -71,7 +71,7 @@ do
         # -m : ativa o modo marker api
         # ./PROG -n n : executa o programa pra entrada n
         # >> ${TEMPOS} : redirecionamento do bash, diz para acresentar isso no arquivo de tempos
-        printf "%s\n%s\n%s\n%s\n" "$n" "$X0" "$EPS" "$MAXIT" | likwid-perfctr -O -C ${CPU} -g ${m} -o ${LIKWID_OUT} -m ./${PROG} -n ${n} >>${TEMPOS}
+        printf "%s\n%s\n%s\n%s\n" "$n" "$X0" "$EPS" "$MAXIT" | likwid-perfctr -O -C ${CPU} -g ${m} -o ${LIKWID_OUT} -m ./${PROG} >>${TEMPOS}
             
         # echo "===> N: ${n} <==" >> ${LIKWID_LOG}
         # pega o conteudo do temporario e junta no log, que eh referente a metrica
