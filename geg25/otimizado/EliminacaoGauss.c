@@ -6,7 +6,7 @@
 
 // DEPOIS MUDAR NOME
 
-void eliminacaoGauss(double **Jdiag, double *S, double *f, int n) {
+void eliminacaoGauss(double *Jdiag, double *S, double *f, int n) {
   triang(Jdiag, f, n);
   retrossubs(Jdiag, S, f, n);
 }
