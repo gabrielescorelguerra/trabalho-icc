@@ -1,7 +1,7 @@
-CC = gcc
-
 CFLAGS = -DLIKWID_PERFMON -I/home/soft/likwid/include
 LFLAGS = -lm -L/home/soft/likwid/lib -llikwid
+
+CC = gcc -O3 $(AVX_FLAGS)
 
 PROG = broyden
 OBJS = utils.o EliminacaoGauss.o NewtonSNLB.o SistNaoLinearBroyden.o
