@@ -20,7 +20,7 @@ TEMPOS="${DATA_DIR}/Tempos.csv"
 METRICA="MEM L2CACHE FLOPS_DP FLOPS_AVX"
 
 # tamanhos
-TAMANHOS="32 64 128 256 512 1000 2000 4000 8000 9000 10000 20000 4092 6000 7000 10000 50000 100000"
+TAMANHOS="32 64 128 256 512 1000 2000 4000 8000 9000 10000 20000"
 
 X0=-1
 EPS=0
@@ -38,13 +38,15 @@ likwid-setFrequencies -g performance -c ${CPU}
 # compila novamente por meio do makefile
 make
 
-# pra cada metrica (flops, cache e energia)
+# remove o csv de tempos de execucoes anteriores
+rm -f ${TEMPOS}
+
+# pra cada metrica (mem, flops, cache)
 for m in ${METRICA}
 do
     # define o arquivo cada metrica, no caso serao 4, um pra cada area
     LIKWID_LOG="${DATA_DIR}/${m}.log"
     # remove resultados anteriores
-    rm -f ${TEMPOS}
     rm -f ${LIKWID_LOG}
     
     # pra cada tamanho a ser testado
@@ -57,7 +59,7 @@ do
         # impreme o que esta sendo executado
         # --->> metria ./programa tamanho
         # so para conseguir acompanhar o que esta sendo executado, nao tem efeito na saida do programa
-        echo "${n} ${X0} ${EPS} ${MAXIT} --->>  $m: ./${PROG}" >/dev/tty
+        echo "n: ${n} , x0: ${X0}, EPS: ${EPS}, MAXIT: ${MAXIT} --->>  $m: ./${PROG}" >/dev/tty
 
         # roda o comando do perfctr e a saida vai para LIKWID_OUT
         # -C : cores
@@ -67,7 +69,7 @@ do
         # ./PROG -n n : executa o programa pra entrada n
         # >> ${TEMPOS} : redirecionamento do bash, diz para acresentar isso no arquivo de tempos
         printf "%s\n%s\n%s\n%s\n" "$n" "$X0" "$EPS" "$MAXIT" | likwid-perfctr -O -C ${CPU} -g ${m} -o ${LIKWID_OUT} -m ./${PROG} \
-                | awk '/^###########$/ {f = !f; next} f' | paste -sd, - | sed "s/^/${n},/" >> ${TEMPOS}
+                | awk '/^###########$/ {f = !f; next} f' | paste -sd, - | sed "${m} ${n} s/^/${n},/" >> ${TEMPOS}
             
         # echo "===> N: ${n} <==" >> ${LIKWID_LOG}
         # pega o conteudo do temporario e junta no log, que eh referente a metrica
