@@ -21,27 +21,22 @@ CPU=${3:-3} # determina o core usado pelo likwid
 DATA_DIR="resultados/${PROG}"
 TEMPOS="${DATA_DIR}/Tempos.csv"
 
-
-
 # metricas a serem avaliadas pelo likwid
 METRICA="MEM L2CACHE FLOPS_DP FLOPS_AVX"
 
-
-
 # tamanhos
-TAMANHOS="32" # 64 128 256 512 1000 2000 4000 8000 9000 10000 20000" # 4092 6000 7000 10000 50000 100000
+TAMANHOS="32 64" # 128 256 512 1000 2000 4000 8000 9000 10000 20000 4092 6000 7000 10000 50000 100000
 
-
-
+x0=2
+EPS=0
+MAXIT=25
 
 # cria, se nao houver, o diretorio de saida
 # -p cria os intermediarios tambem
 mkdir -p ${DATA_DIR}
 
-
 # define frequencia de CPU
 likwid-setFrequencies -g performance -c ${CPU}
-
 
 # remove os arquivos gerados na ultima compilacao, CREIO QUE SERIA O CLEAN DAI? VER OQ FAZER COM ISSO
 # make purge
@@ -60,27 +55,29 @@ do
     # pra cada tamanho a ser testado
     for n in $TAMANHOS
     do
-    # cria um arquivo temporario que vai receber os resultados da execucao especifica
-    # exemplo: resultados/matmult/FLOPS_DP_avx_128.txt
-	LIKWID_OUT="${DATA_DIR}/${m}_${tipo}_${n}.txt"
-	
-    # impreme o que esta sendo executado
-    # --->> metria ./programa tamanho
-	echo "--->>  $m: ./${PROG} 1 1 1 1" >/dev/tty
-    # roda o comando do perfctr e a saida vai para LIKWID_OUT
-    # -C : cores
-    # -g : grupo atual, metrica
-    # -o : arquivo que recebe a saida
-    # -m : ativa o modo marker api
-    # ./PROG -n n : executa o programa pra entrada n
-    # >> ${TEMPOS} : redirecionamento do bash, diz para acresentar isso no arquivo de tempos
-	likwid-perfctr -O -C ${CPU} -g ${m} -o ${LIKWID_OUT} -m ./${PROG} -n ${n} >>${TEMPOS}
-	    
-	# echo "===> N: ${n} <==" >> ${LIKWID_LOG}
-    # pega o conteudo do temporario e junta no log, que eh referente a metrica
-	cat ${LIKWID_OUT} >> ${LIKWID_LOG}
-    # apaga o temporario
-	rm -f ${LIKWID_OUT}
+        # cria um arquivo temporario que vai receber os resultados da execucao especifica
+        # exemplo: resultados/matmult/FLOPS_DP_avx_128.txt
+        LIKWID_OUT="${DATA_DIR}/${m}_${tipo}_${n}.txt"
+        
+        # impreme o que esta sendo executado
+        # --->> metria ./programa tamanho
+        # so para conseguir acompanhar o que esta sendo executado, nao tem efeito na saida do programa
+        echo "printf "%s\n%s\n%s\n%s\n" "$n" "$X0" "$EPS" "$MAXIT" --->>  $m: ./${PROG}" >/dev/tty
+
+        # roda o comando do perfctr e a saida vai para LIKWID_OUT
+        # -C : cores
+        # -g : grupo atual, metrica
+        # -o : arquivo que recebe a saida
+        # -m : ativa o modo marker api
+        # ./PROG -n n : executa o programa pra entrada n
+        # >> ${TEMPOS} : redirecionamento do bash, diz para acresentar isso no arquivo de tempos
+        likwid-perfctr -O -C ${CPU} -g ${m} -o ${LIKWID_OUT} -m ./${PROG} -n ${n} >>${TEMPOS}
+            
+        # echo "===> N: ${n} <==" >> ${LIKWID_LOG}
+        # pega o conteudo do temporario e junta no log, que eh referente a metrica
+        cat ${LIKWID_OUT} >> ${LIKWID_LOG}
+        # apaga o temporario
+        rm -f ${LIKWID_OUT}
     done
 
     # transforma o python num csv e passa para genplot gerar grafico (atividade da proxima aula)
