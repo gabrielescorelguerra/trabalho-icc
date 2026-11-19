@@ -1,0 +1,2 @@
+./baseline: codigo sem otimizacoes e resultados de seus procedimentos
+./otimizado: fonte de fato, codigo otimizado, relatorio, script de plotagem de gráficos
