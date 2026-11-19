@@ -10,28 +10,28 @@ void eliminacaoGauss(double **A, double *X, double *b, int n) {
 
 // triangularização
 void triang(double **A, double *b, int n) {
-    for (int i = 0; i < n; ++i) {
-    pivot(A, b, i, n);
-    
-    // elimina as entradas abaixo do pivô
-    for (int k = i+1; k < n; ++k) {
-        double m = A[k][i] / A[i][i];
-        A[k][i] = 0.0;
-        for (int j = i+1; j < n; ++j)
-            A[k][j] -= A[i][j] * m;
-        b[k] -= b[i] * m;
+    for (int i = 0; i < n - 1; ++i) {
+
+        // pivot(A, b, i, n);
+
+        double m = A[i+1][i] / A[i][i];
+
+        A[i+1][i] = 0;
+        A[i+1][i+1] -= -2 * m;
+        b[i+1] -= b[i] * m;
     }
-  }
 }
 
 // retrossubstituição
 void retrossubs(double **A, double *X, double *b, int n) {
     // resolve o sistema triangular superior AX = b
-    for (int i = n-1; i >=0; --i) {
-        X[i] = b[i];
-        for (int j = i+1; j < n; j++)
-            X[i] -= A[i][j] * X[j];
-        X[i] /= A[i][i];
+    // porque so tem ele e o do lado, dai multiplicando fica assim 
+
+    // ultima linha
+    X[n-1] = b[n-1] / A[n-1][n-1];
+
+    for (int i = n-2; i >=0; --i) {
+        X[i] = (b[i] + 2*X[i + 1]) / A[i][i]; 
     }
 }
 
